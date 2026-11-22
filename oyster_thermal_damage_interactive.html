@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>牡蛎温度损伤模型 · 参数交互演示</title>
+<style>
+:root{--navy:#193f54;--ink:#203b4b;--muted:#5a7180;--pale:#eef4f6;--line:#dce5e9;--red:#bb5b49;--blue:#307b9d;--orange:#bc834a;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f2f4f5;color:var(--ink);font-family:Inter,"Microsoft YaHei","PingFang SC",Arial,sans-serif}main{max-width:1520px;margin:0 auto;background:#fff;min-height:100vh;padding-bottom:18px}
+header{background:var(--navy);color:white;padding:17px 30px;display:flex;align-items:center;justify-content:space-between;gap:20px}h1{font-size:26px;font-weight:650;letter-spacing:.04em;margin:0}header small{font-size:13px;opacity:.85}.layout{display:grid;grid-template-columns:320px 1fr;gap:20px;padding:22px 26px}
+.sidebar{border:1px solid var(--line);border-radius:12px;padding:18px 20px 10px;background:#fafcfc}.side-head{font-size:18px;font-weight:700;margin-bottom:7px}.side-sub{color:var(--muted);font-size:12px;line-height:1.7;margin-bottom:14px}.param{margin-bottom:18px}.param-top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:7px;gap:4px}.param label{font-size:14px;font-weight:600}.value{font-weight:750;font-size:17px;color:var(--red);white-space:nowrap}.unit{font-size:11px;color:var(--muted);margin-left:2px}.param input[type=range]{width:100%;accent-color:var(--red);height:6px;cursor:pointer}.range-ends{display:flex;justify-content:space-between;font-size:10px;color:#93a1a9}.explain{font-size:11.5px;line-height:1.65;color:var(--muted);margin-top:5px}
+.controls-bottom{border-top:1px solid var(--line);padding-top:12px}.reset{appearance:none;border:1px solid #b2c5cd;background:white;color:var(--navy);border-radius:8px;padding:9px 13px;font-size:12px;font-weight:650;cursor:pointer;width:100%}.reset:hover{background:var(--pale)}
+.content{min-width:0}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:14px}.stat{background:#f5f9fa;border:1px solid var(--line);border-radius:10px;padding:12px 15px}.stat-title{font-size:12px;color:var(--muted);margin-bottom:3px}.stat-value{font-size:24px;color:var(--navy);font-weight:760}.stat .metric-unit{font-size:12px;color:var(--muted)}.stat-note{font-size:10px;color:var(--muted);margin-top:2px}
+.plot{border:1px solid var(--line);border-radius:12px;padding:13px 16px 8px;background:white;min-width:0}.plot-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.plot-head strong{font-size:16px}.plot-head span{font-size:11px;color:var(--muted)}.plot svg{width:100%;height:210px;display:block}.plot-main svg{height:250px}.plotgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.legend{display:flex;align-items:center;gap:15px;font-size:11px;color:var(--muted);margin:4px 0 6px 4px}.legend i{display:inline-block;width:18px;vertical-align:middle;border-top:3px solid var(--red);margin-right:6px}.legend i.gray{border-color:#9eafb7;border-top-style:dashed}.note{padding:10px 4px 0;font-size:12px;color:#55707e;line-height:1.6}
+@media(max-width:1050px){.layout{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px}.side-head,.side-sub,.controls-bottom{grid-column:1/-1}.plot-main svg{height:230px}}
+@media(max-width:670px){header{padding:13px}h1{font-size:20px}.layout{padding:12px}.sidebar,.plotgrid{display:block}.stats{grid-template-columns:1fr}.plotgrid .plot{margin-bottom:12px}.stat{padding:8px 12px}.stat-value{font-size:20px}.plot svg,.plot-main svg{height:210px}}
+</style>
+</head>
+<body>
+<main>
+<header><h1>Ⅰ. 温度损伤模型 · 参数交互解释</h1><small>拖动滑块，观察参数的物理含义 ｜ 0–96 h 恒温暴露</small></header>
+<div class="layout">
+<aside class="sidebar">
+<div class="side-head">调节实验条件与模型参数</div>
+<div class="side-sub">红色实线：当前滑块的预测；灰色虚线：原始拟合参数（固定在34 ℃）。所有曲线都是模型计算，并非实测数据。</div>
+<div class="param"><div class="param-top"><label for="T">暴露温度 T</label><span class="value"><span id="vT"></span><span class="unit">℃</span></span></div><input id="T" type="range" min="10" max="40" step="0.5" value="34"><div class="range-ends"><span>10 ℃</span><span>40 ℃</span></div><div class="explain">改变热损伤驱动强度；高于阈值后，温度越高，平衡损伤越大。</div></div>
+<div class="param"><div class="param-top"><label for="Tc">热损伤阈值 T<sub>c</sub></label><span class="value"><span id="vTc"></span><span class="unit">℃</span></span></div><input id="Tc" type="range" min="18" max="30" step="0.25" value="23.25"><div class="range-ends"><span>18 ℃</span><span>30 ℃</span></div><div class="explain">控制温度驱动曲线开始抬升的位置。</div></div>
+<div class="param"><div class="param-top"><label for="alpha">温度增长系数 α</label><span class="value"><span id="valpha"></span><span class="unit">℃⁻¹</span></span></div><input id="alpha" type="range" min="0.08" max="0.50" step="0.0001" value="0.2638"><div class="range-ends"><span>0.08</span><span>0.50</span></div><div class="explain">决定超过阈值后，损伤驱动随温度增长得多快。</div></div>
+<div class="param"><div class="param-top"><label for="kt">调整速率 k<sub>T</sub></label><span class="value"><span id="vkt"></span><span class="unit">d⁻¹</span></span></div><input id="kt" type="range" min="0.2" max="20" step="0.001" value="8.595"><div class="range-ends"><span>0.2</span><span>20</span></div><div class="explain">只影响损伤状态接近平衡的速度，不改变 g(T) 的高度。</div></div>
+<div class="param"><div class="param-top"><label for="bt">损伤致死系数 b<sub>T</sub></label><span class="value"><span id="vbt"></span><span class="unit">d⁻¹</span></span></div><input id="bt" type="range" min="0" max="0.04" step="0.00001" value="0.01208"><div class="range-ends"><span>0</span><span>0.04</span></div><div class="explain">改变相同损伤状态产生的死亡危险率，不改变损伤曲线。</div></div>
+<div class="controls-bottom"><button class="reset" type="button" id="reset">恢复PPT中的拟合参数</button></div>
+</aside>
+<section class="content">
+<div class="stats"><div class="stat"><div class="stat-title">当前温度驱动强度 g(T)</div><div class="stat-value" id="gStat">—</div><div class="stat-note">无量纲；T ≤ T<sub>c</sub> 时为零</div></div><div class="stat"><div class="stat-title">损伤63%响应时间</div><div class="stat-value"><span id="tauStat">—</span><span class="metric-unit"> h</span></div><div class="stat-note">时间常数 24/k<sub>T</sub></div></div><div class="stat"><div class="stat-title">96 h预测存活率</div><div class="stat-value"><span id="sStat">—</span><span class="metric-unit"> %</span></div><div class="stat-note">包括背景死亡 h<sub>b</sub>=0.000885 d⁻¹</div></div></div>
+<div class="plot plot-main"><div class="plot-head"><strong>① 温度决定损伤驱动强度</strong><span>g(T) = max[exp(α(T−T<sub>c</sub>))−1, 0]</span></div><svg id="plotG" viewBox="0 0 850 245" role="img" aria-label="温度驱动 g(T) 的实时函数图"></svg><div class="legend"><span><i></i>当前参数</span><span><i class="gray"></i>PPT原始参数</span></div></div>
+<div class="plotgrid">
+<div class="plot"><div class="plot-head"><strong>② 损伤随时间建立</strong><span>D<sub>T</sub>(0)=0</span></div><svg id="plotD" viewBox="0 0 510 220" role="img" aria-label="温度损伤状态随暴露时间变化"></svg></div>
+<div class="plot"><div class="plot-head"><strong>③ 损伤转化为死亡风险</strong><span>独立温度致死模型</span></div><svg id="plotS" viewBox="0 0 510 220" role="img" aria-label="存活率随暴露时间变化"></svg></div>
+</div>
+<div class="note"><strong>读图方法：</strong>拖动 T<sub>c</sub> 与 α，先观察①的形状；拖动 k<sub>T</sub>，观察②在不改变终点水平时如何变快或变慢；拖动 b<sub>T</sub>，观察③的存活率变化。背景死亡单独固定，不把低温无损伤误认为绝对零死亡。</div>
+</section></div></main>
+<script>
+(function(){'use strict';
+const keys=['T','Tc','alpha','kt','bt'];const base={T:34,Tc:23.25,alpha:.2638,kt:8.595,bt:.01208,hb:.000885};let p={...base};
+const $=x=>document.getElementById(x);
+const drive=(temp,q)=>Math.max(Math.exp(q.alpha*(temp-q.Tc))-1,0);
+const damage=(hours,q)=>drive(q.T,q)*(-Math.expm1(-q.kt*hours/24));
+const survival=(hours,q)=>{let t=hours/24;let integral=drive(q.T,q)*(t+Math.expm1(-q.kt*t)/q.kt);return Math.exp(-q.hb*t-q.bt*integral)};
+function elem(name,attrs,parent,text){let e=document.createElementNS('http://www.w3.org/2000/svg',name);Object.entries(attrs||{}).forEach(([k,v])=>e.setAttribute(k,''+v));if(text!==undefined)e.textContent=text;parent.appendChild(e);return e}
+const fmt=(n,d)=>Number(n.toFixed(d)).toString();
+function plot(svgId,opt){let svg=$(svgId);svg.replaceChildren();const w=opt.w,h=opt.h,l=54,r=18,t=13,b=38,pw=w-l-r,ph=h-t-b,xmin=opt.xmin,xmax=opt.xmax;
+const x=v=>l+(v-xmin)/(xmax-xmin)*pw;let maxY=opt.ymax, minY=0;const y=v=>t+(maxY-v)/(maxY-minY)*ph;
+const ticks=opt.yticks||[0,maxY/4,maxY/2,maxY*3/4,maxY];
+for(let v of ticks){elem('line',{x1:l,y1:y(v),x2:w-r,y2:y(v),stroke:'#e6edef','stroke-width':1},svg);elem('text',{x:l-9,y:y(v)+4,'font-size':12,fill:'#708591','text-anchor':'end'},svg,opt.yfmt?opt.yfmt(v):fmt(v,0))}
+for(let v of opt.xticks){elem('line',{x1:x(v),y1:h-b,x2:x(v),y2:h-b+5,stroke:'#99aab2'},svg);elem('text',{x:x(v),y:h-12,'font-size':12,fill:'#708591','text-anchor':'middle'},svg,v)}
+elem('line',{x1:l,y1:t,x2:l,y2:h-b,stroke:'#708591'},svg);elem('line',{x1:l,y1:h-b,x2:w-r,y2:h-b,stroke:'#708591'},svg);
+if(opt.xlab)elem('text',{x:(l+w-r)/2,y:h-1,'font-size':12,fill:'#445f70','text-anchor':'middle'},svg,opt.xlab);
+if(opt.ylab)elem('text',{x:l+5,y:t+11,'font-size':12,fill:'#445f70'},svg,opt.ylab);
+const clipId='clip_'+svgId;let defs=elem('defs',{},svg),clip=elem('clipPath',{id:clipId},defs);elem('rect',{x:l,y:t,width:pw,height:ph},clip);let layer=elem('g',{'clip-path':'url(#'+clipId+')'},svg);
+function line(f,color,dash,width){let pts=[];for(let i=0;i<=220;i++){let xx=xmin+(xmax-xmin)*i/220;let yy=f(xx);pts.push((i?'L':'M')+x(xx).toFixed(2)+','+y(Math.min(Math.max(yy,0),maxY)).toFixed(2))}elem('path',{d:pts.join(' '),fill:'none',stroke:color,'stroke-width':width||3,'stroke-dasharray':dash||'', 'stroke-linejoin':'round','stroke-linecap':'round'},layer)}
+line(opt.baseline,'#a6b5bd','7 7',2.6);line(opt.current,'#bd5d4e','',3.5);
+if(opt.marker!==undefined){let mx=x(opt.marker),my=y(opt.current(opt.marker));elem('line',{x1:mx,y1:t,x2:mx,y2:h-b,stroke:'#d29b91','stroke-dasharray':'5 5'},layer);elem('circle',{cx:mx,cy:my,r:5.2,fill:'#bd5d4e',stroke:'white','stroke-width':2},layer)}
+if(opt.threshold!==undefined){let xx=x(opt.threshold);elem('line',{x1:xx,y1:t,x2:xx,y2:h-b,stroke:'#b85e51','stroke-width':1.2,'stroke-dasharray':'3 4'},layer)}
+}
+function update(){keys.forEach(k=>p[k]=Number($(k).value));$('vT').textContent=fmt(p.T,1);$('vTc').textContent=p.Tc.toFixed(2);$('valpha').textContent=p.alpha.toFixed(4);$('vkt').textContent=p.kt.toFixed(3);$('vbt').textContent=p.bt.toFixed(5);$('gStat').textContent=drive(p.T,p).toFixed(2);$('tauStat').textContent=(24/p.kt).toFixed(2);$('sStat').textContent=(100*survival(96,p)).toFixed(1);
+let curMax=drive(40,p),baseMax=drive(40,base);let ymax=Math.max(10,curMax,baseMax)*1.08;
+plot('plotG',{w:850,h:245,xmin:10,xmax:40,ymax,xticks:[10,15,20,25,30,35,40],xlab:'温度 (℃)',ylab:'g(T)',current:t=>drive(t,p),baseline:t=>drive(t,base),marker:p.T,threshold:p.Tc,yticks:[0,.25,.5,.75,1].map(f=>f*ymax),yfmt:x=>fmt(x,1)});
+let dMax=Math.max(drive(p.T,p),drive(base.T,base),.5)*1.1;
+plot('plotD',{w:510,h:220,xmin:0,xmax:96,ymax:dMax,xticks:[0,24,48,72,96],xlab:'暴露时间 (h)',ylab:'D_T',current:h=>damage(h,p),baseline:h=>damage(h,base),marker:48,yfmt:x=>fmt(x,1)});
+plot('plotS',{w:510,h:220,xmin:0,xmax:96,ymax:100,xticks:[0,24,48,72,96],xlab:'暴露时间 (h)',ylab:'存活率 (%)',current:h=>survival(h,p)*100,baseline:h=>survival(h,base)*100,marker:96,yticks:[0,25,50,75,100],yfmt:x=>fmt(x,0)});
+}
+keys.forEach(k=>$(k).addEventListener('input',update));$('reset').addEventListener('click',()=>{keys.forEach(k=>$(k).value=base[k]);update()});update();
+})();
+</script>
+</body>
+</html>

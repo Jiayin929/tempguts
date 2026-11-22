@@ -14,6 +14,55 @@ header{background:var(--navy);color:white;padding:17px 30px;display:flex;align-i
 .plot{border:1px solid var(--line);border-radius:12px;padding:13px 16px 8px;background:white;min-width:0}.plot-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.plot-head strong{font-size:16px}.plot-head span{font-size:11px;color:var(--muted)}.plot svg{width:100%;height:210px;display:block}.plot-main svg{height:250px}.plotgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.legend{display:flex;align-items:center;gap:15px;font-size:11px;color:var(--muted);margin:4px 0 6px 4px}.legend i{display:inline-block;width:18px;vertical-align:middle;border-top:3px solid var(--red);margin-right:6px}.legend i.gray{border-color:#9eafb7;border-top-style:dashed}.note{padding:10px 4px 0;font-size:12px;color:#55707e;line-height:1.6}
 @media(max-width:1050px){.layout{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px}.side-head,.side-sub,.controls-bottom{grid-column:1/-1}.plot-main svg{height:230px}}
 @media(max-width:670px){header{padding:13px}h1{font-size:20px}.layout{padding:12px}.sidebar,.plotgrid{display:block}.stats{grid-template-columns:1fr}.plotgrid .plot{margin-bottom:12px}.stat{padding:8px 12px}.stat-value{font-size:20px}.plot svg,.plot-main svg{height:210px}}
+
+/* TempGUTS: PowerPoint narrow-content layout. Keep controls and all three plots visible together. */
+@media (max-width:1050px) {
+  main{min-height:0;padding-bottom:4px}
+  header{padding:9px 12px;gap:7px}
+  h1{font-size:16px;letter-spacing:0}
+  header small{font-size:9px;max-width:195px;text-align:right}
+  .layout{display:grid;grid-template-columns:206px minmax(0,1fr);gap:8px;padding:9px 8px}
+  .sidebar{display:block;padding:9px 10px 6px;border-radius:7px}
+  .side-head{font-size:12px;margin-bottom:2px}
+  .side-sub{font-size:8px;line-height:1.35;margin-bottom:6px}
+  .param{margin-bottom:7px}
+  .param-top{margin-bottom:1px}
+  .param label{font-size:10px}
+  .value{font-size:11px}
+  .unit{font-size:8px}
+  .param input[type=range]{height:4px;margin:1px 0;min-height:13px}
+  .range-ends{font-size:8px}
+  .explain{font-size:8px;line-height:1.28;margin-top:1px}
+  .controls-bottom{padding-top:6px}
+  .reset{padding:5px 5px;font-size:9px;border-radius:5px}
+  .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-bottom:6px}
+  .stat{padding:5px 5px;border-radius:5px}
+  .stat-title{font-size:8px;line-height:1.2;min-height:19px}
+  .stat-value{font-size:16px}
+  .stat .metric-unit{font-size:9px}
+  .stat-note{font-size:7.5px;line-height:1.2}
+  .plot{padding:5px 6px 3px;border-radius:6px}
+  .plot-head{gap:3px;flex-wrap:wrap}
+  .plot-head strong{font-size:10.5px}
+  .plot-head span{font-size:8px}
+  .plot svg{height:124px}
+  .plot-main svg{height:156px}
+  .plotgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px;margin-top:6px}
+  .plotgrid .plot{margin-bottom:0}
+  .legend{font-size:8px;margin:2px 0 3px 2px;gap:6px}
+  .legend i{width:10px;border-top-width:2px;margin-right:3px}
+  .note{font-size:8px;line-height:1.35;padding:5px 0 0}
+}
+/* For very small add-in frames: allow scrolling rather than overlapping content. */
+@media (max-width:500px){
+ .layout{grid-template-columns:175px minmax(0,1fr);gap:5px;padding:5px}
+ h1{font-size:13px}
+ header small{font-size:8px}
+ .sidebar{padding:7px}
+ .plot-head span{display:none}
+ .plot svg{height:112px}
+ .plot-main svg{height:130px}
+}
 </style>
 </head>
 <body>
